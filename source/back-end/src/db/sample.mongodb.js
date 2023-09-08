@@ -1,4 +1,7 @@
-const fs = require('fs');
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+//const fs = require('fs');
+import fs from "fs";
 
 const IbmCloudSecretsManagerApiV1 =  require('@ibm-cloud/secrets-manager/secrets-manager/v1');
 const { IamAuthenticator } = require('@ibm-cloud/secrets-manager/auth');
@@ -27,38 +30,38 @@ const create_connection = async () => {
             secretType: 'imported_cert',
             id: process.env.SECRET_MANAGER_CERT_ID,
         });
-        
+
         // Create an auxiliary certificate file for the mongoose connection
         const cert_name = './certificate.pem';
         fs.writeFileSync(cert_name, cert.result.resources[0].secret_data.certificate, (err) => {if (err) throw err;});
-        
+
         // Connect to the mongodb database
         await mongoose.connect(
-            uri = process.env.MONGO_DB_URI, 
+            uri = process.env.MONGO_DB_URI,
             options = {
                 ssl: true,
                 sslValidate: false,
                 sslCA: cert_name,
             }
         );
-        
+
         // Store connection
         let db = mongoose.connection;
-        
+
         // Check connection status
-        // Values are: 
+        // Values are:
         //  0: disconnected
         //  1: connected
         //  2: connecting
         //  3: disconnecting
 
         if (db.readyState == 1){
-            console.log("MongoDB connection successful.");    
+            console.log("MongoDB connection successful.");
         }
         else{
             console.error.bind(console, "connection error: ");
         }
-        
+
         // Delete temporary certificate file
         fs.unlinkSync(cert_name);
 
@@ -82,8 +85,9 @@ const close_connection = async () => {
 
     }
 }
-
+/*
 module.exports = {
     create_connection,
     close_connection,
-};
+};*/
+export default { create_connection, close_connection };

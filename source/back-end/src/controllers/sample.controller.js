@@ -1,7 +1,9 @@
-const { request, response } = require("express");
+//const { request, response } = require("express");
+import { request, response } from "express";
 
 // Mongoose Schemas
-const Sample = require("./sample.schema");
+//const Sample = require("../models/sample.schema");
+import Sample from "../models/sample.schema.js";
 
 /**
  * Sample Controller
@@ -28,11 +30,11 @@ const sample = async (req = request, res = response) => {
                 }
               }
             }
-        }   
+        }
     */
     try {
         // Your Code Goes Here!!!!
-        
+        result = await Sample.find({});
         // Return query result
         res.json ({
             result : result
@@ -43,7 +45,8 @@ const sample = async (req = request, res = response) => {
         });
     }
 };
-
+/*
 module.exports = {
     sample,
-};
+};*/
+export default { sample };
