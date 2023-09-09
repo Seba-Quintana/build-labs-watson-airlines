@@ -34,7 +34,7 @@ const sample = async (req = request, res = response) => {
     */
     try {
         // Your Code Goes Here!!!!
-        result = await Sample.find({});
+        let result = await Sample.find({});
         // Return query result
         res.json ({
             result : result
