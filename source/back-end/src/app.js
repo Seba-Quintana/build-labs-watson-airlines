@@ -1,11 +1,3 @@
-/*
-const path = require("path");
-const mongoose = require('mongoose');
-const mongo = require("./db/sample.mongodb");
-const express = require("express");
-const sampleRouter = require("./routes/sample.routes");
-const http = require("http");
-*/
 // this is to be able to use require in ES module
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -14,7 +6,11 @@ import path from "path";
 import mongoose from "mongoose";
 import mongo from "./db/sample.mongodb.js";
 import express from "express";
+
 import sampleRouter from "./routes/sample.routes.js";
+import airlinesRouter from "./routes/airlines.routes.js";
+import flightsRouter from "./routes/flights.routes.js";
+
 import http from "http";
 
 const app = express();
@@ -34,8 +30,9 @@ async function main(){
     await create_connection();
 
 	// Set up routes
-	console.log("Setting up routes...");
 	app.use("/samplea", sampleRouter);
+	app.use("/airlines", airlinesRouter);
+	app.use("/flights", flightsRouter);
 
 	// Error handling
 	app.use((req, res, next) => {
