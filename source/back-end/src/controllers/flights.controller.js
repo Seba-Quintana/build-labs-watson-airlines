@@ -4,15 +4,27 @@ import { request, response } from "express";
 import Flight from "../models/flight.schema.js";
 
 /**
- * Airlines Controller
- * @param {JSON} req request associated airlines
- * @param {JSON} res response list of associated airlines
- * @returns {JSON} return description
+ * searches for flights by origin airport
+ * @param {JSON} req request origin airport
+ * @param {JSON} res response list of flights that start at the origin airport
+ * @returns {JSON} return flights data
  */
-const SearchByOriginAirport = async (req = request, res = response) => {
+const search_by_origin_airport = async (req = request, res = response) => {
     try {
-		let originAirport = req.body;
-		let result = await Flight.find({DESTINATION_AIRPORT: originAirport});
+		const originAirport = req.body.ORIGIN_AIRPORT;
+		if (!originAirport) {
+            return res.status(400).json({
+                status: 'Bad Request',
+                message: 'Please provide a valid ORIGIN_AIRPORT in the request body.'
+            });
+        }
+		const result = await Flight.find({ORIGIN_AIRPORT: originAirport});
+		if (result.length === 0) {
+            return res.status(404).json({
+                status: 'Not Found',
+                message: 'No flights found for the provided origin airport.'
+            });
+        }
         res.json ({
             result : result
         });
@@ -24,15 +36,27 @@ const SearchByOriginAirport = async (req = request, res = response) => {
 };
 
 /**
- * Airlines Controller
- * @param {JSON} req request associated airlines
- * @param {JSON} res response list of associated airlines
- * @returns {JSON} return description
+ * searches for flights by destination airport
+ * @param {JSON} req request destination airport
+ * @param {JSON} res response list of flights that ends at the destination airport
+ * @returns {JSON} return flights data
  */
-const SearchByDestinationAirport = async (req = request, res = response) => {
+const search_by_destination_airport = async (req = request, res = response) => {
     try {
-		let destAirport = req.body;
-		let result = await Flight.find({DESTINATION_AIRPORT: destAirport});
+		const destAirport = req.body.DESTINATION_AIRPORT;
+		if (!destAirport) {
+            return res.status(400).json({
+                status: 'Bad Request',
+                message: 'Please provide a valid airport destination in the request body.'
+            });
+        }
+		const result = await Flight.find({DESTINATION_AIRPORT: destAirport});
+		if (result.length === 0) {
+            return res.status(404).json({
+                status: 'Not Found',
+                message: 'No flights found for the provided origin airport.'
+            });
+        }
         res.json ({
             result : result
         });
@@ -44,15 +68,35 @@ const SearchByDestinationAirport = async (req = request, res = response) => {
 };
 
 /**
- * Airlines Controller
- * @param {JSON} req request associated airlines
- * @param {JSON} res response list of associated airlines
- * @returns {JSON} return description
+ * searches for flights by origin and destination airport
+ * @param {JSON} req request origin and destination airport
+ * @param {JSON} res response list of flights that starts 
+ * at the origin airport and ends at the destination airport
+ * @returns {JSON} return flights data
  */
-const SearchByDepartureDate = async (req = request, res = response) => {
+const search_by_ori_and_dest_airport = async (req = request, res = response) => {
     try {
-		let date = req.body;
-		let result = await Flight.find({DEPARTURE_DATE: date});
+		const originAirport = req.body.ORIGIN_AIRPORT;
+		const destAirport = req.body.DESTINATION_AIRPORT;
+		let filters = {};
+
+		if ((!destAirport) || (!originAirport)) {
+            return res.status(400).json({
+                status: 'Bad Request',
+                message: 'Please provide a valid airport origin and destination in the request body.'
+            });
+        }
+		filters.ORIGIN_AIRPORT = originAirport;
+		filters.DESTINATION_AIRPORT = destAirport;
+
+		const result = await Flight.find(filters);
+
+		if (result.length === 0) {
+            return res.status(404).json({
+                status: 'Not Found',
+                message: 'No flights found for the provided origin airport.'
+            });
+        }
         res.json ({
             result : result
         });
@@ -64,14 +108,44 @@ const SearchByDepartureDate = async (req = request, res = response) => {
 };
 
 /**
- * Airlines Controller
- * @param {JSON} req request information about Watson Airlines
- * @param {JSON} res response Watson Airlines description
- * @returns {JSON} return description
+ * searches for flights by departure date. It is possible to use origin airport,
+ * destination airport, and airline as extra filters
+ * @param {JSON} req request departure date
+ * @param {JSON} res response list of flights that depart on the departure date
+ * @returns {JSON} return flights data
  */
-const Info = async (req = request, res = response) => {
+const search_by_departure_date = async (req = request, res = response) => {
     try {
-        let result = await Flight.find({})
+		const data = req.body;
+		const date = data.DEPARTURE_DATE;
+		const filters = {};
+
+		if (!date) {
+			return res.status(400).json({
+				status: 'Bad Request',
+				message: 'Please provide a valid departure date in the request body.'
+			});
+		}
+		filters.DEPARTURE_DATE = date;
+
+        if (data.ORIGIN_AIRPORT) {
+            filters.ORIGIN_AIRPORT = data.ORIGIN_AIRPORT;
+        }
+        if (data.DESTINATION_AIRPORT) {
+            filters.DESTINATION_AIRPORT = data.DESTINATION_AIRPORT;
+        }
+        if (data.AIRLINE) {
+            filters.AIRLINE = data.AIRLINE;
+        }
+
+		const result = await Flight.find(filters);
+
+		if (result.length === 0) {
+            return res.status(404).json({
+                status: 'Not Found',
+                message: 'No flights found for the provided date.'
+            });
+        }
         res.json ({
             result : result
         });
@@ -82,4 +156,42 @@ const Info = async (req = request, res = response) => {
     }
 };
 
-export default { SearchByOriginAirport, SearchByDestinationAirport, SearchByDepartureDate, Info };
+/**
+ * searches for information about a specific flight by id
+ * @param {JSON} req request flight id
+ * @param {JSON} res response flight requested
+ * @returns {JSON} return flight data
+ */
+const flight_info = async (req = request, res = response) => {
+    try {
+		const flightId = req.body._id;
+		if (!flightId) {
+			return res.status(400).json({
+				status: 'Bad Request',
+				message: 'Please provide a valid departure date in the request body.'
+			});
+		}
+        const result = await Flight.find({_id: flightId});
+		if (result.length === 0) {
+            return res.status(404).json({
+                status: 'Not Found',
+                message: 'No flights found for the provided date.'
+            });
+        }
+        res.json ({
+            result : result
+        });
+    } catch (error) {
+        res.json ({
+            status : error.status
+        });
+    }
+};
+
+export default {
+	search_by_origin_airport,
+	search_by_destination_airport,
+	search_by_ori_and_dest_airport,
+	search_by_departure_date,
+	flight_info
+};
