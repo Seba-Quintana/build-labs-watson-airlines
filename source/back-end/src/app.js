@@ -29,6 +29,8 @@ async function main(){
 	const { create_connection } = mongo;
     await create_connection();
 
+	app.use(express.json());
+
 	// Set up routes
 	app.use("/samplea", sampleRouter);
 	app.use("/airlines", airlinesRouter);
