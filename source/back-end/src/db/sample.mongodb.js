@@ -35,14 +35,16 @@ const create_connection = async () => {
         const cert_name = './certificate.pem';
         fs.writeFileSync(cert_name, cert.result.resources[0].secret_data.certificate, (err) => {if (err) throw err;});
 
+		const uri = process.env.MONGO_DB_URI;
+		const options = {
+			ssl: true,
+			sslValidate: false,
+			sslCA: cert_name,
+		};
         // Connect to the mongodb database
         await mongoose.connect(
-            uri = process.env.MONGO_DB_URI,
-            options = {
-                ssl: true,
-                sslValidate: false,
-                sslCA: cert_name,
-            }
+            uri,
+            options
         );
 
         // Store connection
