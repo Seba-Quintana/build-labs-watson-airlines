@@ -1,0 +1,239 @@
+openapi: 3.0.3
+info:
+  title: "Watson Airlines Customer Experience"
+  description: |-
+    This is a Sample REST API for the Watson Airlines Customer Experience use case.
+
+    - [Github repository](https://github.com/Seba-Quintana/build-labs-watson-airlines.git)
+  contact:
+    name: "Josefina R. Casanova"
+    email: "josefinarcasanova@ibm.com"
+
+  version: 1.0.11
+
+servers:
+  - url: "https://localhost:3000"
+    description: "Local Server"
+
+paths:
+  /flights/originAirport/{IATAcode}:
+    get:
+      tags:
+        - flights
+      summary: searches for flights
+      description: Searches for flights by origin airport
+      operationId: getFlightsByOrigin
+      parameters:
+        - name: IATAcode
+          in: path
+          description: origin airport
+          required: true
+          schema:
+            type: string
+            example: "SFO"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flights'
+        '400':
+          description: Invalid airport supplied
+        '404':
+          description: Flight not found
+  /flights/destAirport/{IATAcode}:
+    get:
+      tags:
+        - flights
+      summary: searches for flights
+      description: Searches for flights by destination airport
+      operationId: getFlightsByDestination
+      parameters:
+        - name: IATAcode
+          in: path
+          description: destination airport
+          required: true
+          schema:
+            type: string
+            example: "CLT"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flights'
+        '400':
+          description: Invalid airport supplied
+        '404':
+          description: Flight not found
+  /flights/oriDestAirport:
+    get:
+      tags:
+        - flights
+      summary: searches for flights
+      description: Searches for flights by origin and destination airport
+      operationId: getFlightsByOriAndDest
+      parameters:
+        - name: origin
+          in: query
+          description: origin airport
+          required: true
+          schema:
+            type: string
+            example: "SFO"
+        - name: destination
+          in: query
+          description: destination airport
+          required: true
+          schema:
+            type: string
+            example: "CLT"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flights'
+        '400':
+          description: Invalid airport supplied
+        '404':
+          description: Flight not found
+  /flights/depDate:
+    post:
+      tags:
+        - flights
+      summary: searches for flight
+      description: Searches for flight by departure date
+      operationId: getFlightsByDepDate
+      requestBody:
+        description: Searches for flights by departure date
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flights'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flights'
+        '400':
+          description: Invalid date supplied
+        '404':
+          description: Flight not found
+  /flights/flightInfo/{id}:
+    get:
+      tags:
+        - flights
+      summary: searches for flight
+      description: Searches for a specific flight by id
+      operationId: getFlightsById
+      parameters:
+        - name: id
+          in: path
+          description: flight id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flights'
+        '400':
+          description: Invalid id value
+        '404':
+          description: Flight not found
+
+  /airlines/about:
+    get:
+      tags:
+        - airlines
+      summary: Watson Airlines description
+      description: Gives Watson Airlines description
+      operationId: getDescription
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /airlines/airlines:
+    get:
+      tags:
+        - airlines
+      summary: Find associated airlines
+      description: Returns all airlines associated with Watson Airlines
+      operationId: getAirlines
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Airlines'
+        '404':
+          description: Airlines not found
+components:
+  schemas:
+    Flights:
+      type: object
+      properties:
+        AIRLINE:
+          type: string
+          example: "US"
+        FLIGHT_NUMBER:
+          type: integer
+          format: int64
+          example: 840
+        ORIGIN_AIRPORT:
+          type: string
+          example: "SFO"
+        DESTINATION_AIRPORT:
+          type: string
+          example: "CLT"
+        CANCELLED:
+          type: boolean
+        DEPARTURE_DATE:
+          type: string
+          format: date-time
+        ARRIVAL_DATE:
+          type: string
+          format: date-time
+    Airlines:
+      type: object
+      properties:
+        IATA_CODE:
+          type: string
+          example: "US"
+        Airline:
+          type: string
+          example: "US Airways Inc."
+    Airports:
+      type: object
+      properties:
+        IATA_CODE:
+          type: string
+          example: "AMA"
+        AIRPORT:
+          type: string
+          example: "Rick Husband Amarillo International Airport"
+        CITY:
+          type: string
+          example: "Amarillo"
+        STATE:
+          type: string
+          example: "TX"
+        COUNTRY:
+          type: string
+          example: "USA"
