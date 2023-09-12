@@ -4,10 +4,9 @@ const require = createRequire(import.meta.url);
 
 import path from "path";
 import mongoose from "mongoose";
-import mongo from "./db/sample.mongodb.js";
+import mongo from "./db/db.mongodb.js";
 import express from "express";
 
-import sampleRouter from "./routes/sample.routes.js";
 import airlinesRouter from "./routes/airlines.routes.js";
 import flightsRouter from "./routes/flights.routes.js";
 
@@ -25,14 +24,12 @@ async function main(){
     require("dotenv").config({path: path.resolve(__dirname,"../.env")});
 
     // Connect to database
-    //const { create_connection } = require("./db/sample.mongodb");
 	const { create_connection } = mongo;
     await create_connection();
 
 	app.use(express.json());
 
 	// Set up routes
-	app.use("/samplea", sampleRouter);
 	app.use("/airlines", airlinesRouter);
 	app.use("/flights", flightsRouter);
 
