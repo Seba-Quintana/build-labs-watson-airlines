@@ -1,5 +1,3 @@
-//const express = require("express");
-//const controller = require("../controllers/sample.controller");
 import express from "express";
 import controller from "../controllers/airlines.controller.js";
 
