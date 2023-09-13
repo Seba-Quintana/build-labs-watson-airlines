@@ -15,7 +15,7 @@
 		"description": "Local Server"
 	  },
 	  {
-		"url": "https://sqwatsonairlines1.br-sao.codeengine.appdomain.cloud",
+		"url": "https://sqwatsonairlines.172009eskifl.us-south.codeengine.appdomain.cloud",
 		"description": "IBM Code Engine Deployment"
 	  }
 	],
@@ -26,7 +26,7 @@
 		  "tags": [
 			"flights"
 		  ],
-		  "summary": "searches for flights",
+		  "summary": "searches for flights by origin airport",
 		  "description": "Searches for flights by origin airport",
 		  "operationId": "getFlightsByOrigin",
 		  "parameters": [
@@ -66,7 +66,7 @@
 		  "tags": [
 			"flights"
 		  ],
-		  "summary": "searches for flights",
+		  "summary": "searches for flights by destination airport",
 		  "description": "Searches for flights by destination airport",
 		  "operationId": "getFlightsByDestination",
 		  "parameters": [
@@ -106,7 +106,7 @@
 		  "tags": [
 			"flights"
 		  ],
-		  "summary": "searches for flights",
+		  "summary": "searches for flights by origin and destination airport",
 		  "description": "Searches for flights by origin and destination airport",
 		  "operationId": "getFlightsByOriAndDest",
 		  "parameters": [
@@ -156,7 +156,7 @@
 		  "tags": [
 			"flights"
 		  ],
-		  "summary": "searches for flight",
+		  "summary": "searches for flight by departure date",
 		  "description": "Searches for flight by departure date",
 		  "operationId": "getFlightsByDepDate",
 		  "requestBody": {
@@ -195,7 +195,7 @@
 		  "tags": [
 			"flights"
 		  ],
-		  "summary": "searches for flight",
+		  "summary": "searches for a specific flight by id",
 		  "description": "Searches for a specific flight by id",
 		  "operationId": "getFlightsById",
 		  "parameters": [
@@ -205,8 +205,8 @@
 			  "description": "flight id",
 			  "required": true,
 			  "schema": {
-				"type": "integer",
-				"format": "int64"
+				"type": "string",
+				"example": ""
 			  }
 			}
 		  ],
@@ -257,7 +257,7 @@
 		  "tags": [
 			"airlines"
 		  ],
-		  "summary": "Find associated airlines",
+		  "summary": "find associated airlines",
 		  "description": "Returns all airlines associated with Watson Airlines",
 		  "operationId": "getAirlines",
 		  "responses": {
