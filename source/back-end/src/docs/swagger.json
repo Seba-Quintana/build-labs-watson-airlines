@@ -15,7 +15,7 @@
 		"description": "Local Server"
 	  },
 	  {
-		"url": "https://sqwatsonairlines.172009eskifl.us-south.codeengine.appdomain.cloud",
+		"url": "https://sqwatsonairlinesv2.172009eskifl.us-south.codeengine.appdomain.cloud",
 		"description": "IBM Code Engine Deployment"
 	  }
 	],
@@ -206,7 +206,7 @@
 			  "required": true,
 			  "schema": {
 				"type": "string",
-				"example": ""
+				"example": "63e53b3d123da255099f27a6"
 			  }
 			}
 		  ],
