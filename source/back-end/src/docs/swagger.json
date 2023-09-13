@@ -15,7 +15,7 @@
 		"description": "Local Server"
 	  },
 	  {
-		"url": "https://{app-name}.{cloud-region}.codeengine.appdomain.cloud",
+		"url": "https://sqwatsonairlines1.br-sao.codeengine.appdomain.cloud",
 		"description": "IBM Code Engine Deployment"
 	  }
 	],
