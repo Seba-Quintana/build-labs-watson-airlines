@@ -18,7 +18,8 @@ const search_by_origin_airport = async (req = request, res = response) => {
                 message: 'Please provide a valid origin airport in the request body.'
             });
         }
-		const result = await Flight.find({ORIGIN_AIRPORT: originAirport});
+		// watson assistant doesnt accept large responses, hence the limit
+		const result = await Flight.find({ORIGIN_AIRPORT: originAirport}).limit(20);
 		if (result.length === 0) {
             return res.status(404).json({
                 status: 'Not Found',
@@ -50,7 +51,7 @@ const search_by_destination_airport = async (req = request, res = response) => {
                 message: 'Please provide a valid airport destination in the request body.'
             });
         }
-		const result = await Flight.find({DESTINATION_AIRPORT: destAirport});
+		const result = await Flight.find({DESTINATION_AIRPORT: destAirport}).limit(20);
 		if (result.length === 0) {
             return res.status(404).json({
                 status: 'Not Found',
@@ -89,7 +90,7 @@ const search_by_ori_and_dest_airport = async (req = request, res = response) => 
 		filters.ORIGIN_AIRPORT = originAirport;
 		filters.DESTINATION_AIRPORT = destAirport;
 
-		const result = await Flight.find(filters);
+		const result = await Flight.find(filters).limit(20);
 
 		if (result.length === 0) {
             return res.status(404).json({
@@ -126,7 +127,15 @@ const search_by_departure_date = async (req = request, res = response) => {
 				message: 'Please provide a valid departure date in the request body.'
 			});
 		}
-		filters.DEPARTURE_DATE = date;
+		const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        filters.DEPARTURE_DATE = {
+            $gte: startOfDay,
+            $lte: endOfDay
+        };
 
         if (data.ORIGIN_AIRPORT) {
             filters.ORIGIN_AIRPORT = data.ORIGIN_AIRPORT;
@@ -138,7 +147,7 @@ const search_by_departure_date = async (req = request, res = response) => {
             filters.AIRLINE = data.AIRLINE;
         }
 
-		const result = await Flight.find(filters);
+		const result = await Flight.find(filters).limit(20);
 
 		if (result.length === 0) {
             return res.status(404).json({
