@@ -1,10 +1,12 @@
 {
+  "type": "module",
   "name": "build-labs-assassment",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"swagger": "node ./src/docs/sample.openapi-generation.js"
   },
   "author": "josefinarcasanova",
   "license": "ISC",

@@ -22,4 +22,4 @@ COPY . .
 # ------------------------------
 
 # Run application
-CMD [ "node", "app.js" ]
+CMD [ "node", "src/app.js" ]

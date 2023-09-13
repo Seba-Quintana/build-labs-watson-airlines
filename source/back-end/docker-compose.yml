@@ -1,0 +1,15 @@
+version: '3'
+services:
+  nodejs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - SECRET_MANAGER_APIKEY=${SECRET_MANAGER_APIKEY}
+      - SECRET_MANAGER_URL=${SECRET_MANAGER_URL}
+      - SECRET_MANAGER_CERT_ID=${SECRET_MANAGER_CERT_ID}
+      - MONGO_DB_URI=${MONGO_DB_URI}
+    working_dir: /usr/src/app
+    
